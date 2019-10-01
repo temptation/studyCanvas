@@ -7,8 +7,13 @@
 <body>
 <canvas id="myCanvas" width="800px" height="600px"></canvas>
 <script>
-    var canvas = document.getElementById('myCanvas');
-    var context = canvas.getContext('2d');
+    // 获取canvas元素
+    let canvas = document.getElementById('myCanvas');
+    // getContext()方法：返回一个用于在画布上绘图的环境
+    // 语法：Canvas.getContext(contextID)
+    // 参数contextID指定了您想要在画布上绘制的类型。当前唯一的合法值是 "2d"，它指定了二维绘图，并且导致这个方法返回一个环境对象，该对象导出一个二维绘图 API。
+    // 返回一个CanvasRenderingContext2D对象，使用它可以绘制到Canvas元素中。
+    let context = canvas.getContext('2d');
 
     context.font = '24pt 微软雅黑';
     context.fillStyle = 'red';

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>线段</title>
+</head>
+<body>
+<canvas id="myCanvas" width="800px" height="600px"></canvas>
+<script>
+    let canvas = document.getElementById('myCanvas');
+    let context = canvas.getContext('2d');
+
+    context.beginPath();
+    context.moveTo(100, 150);
+    context.lineTo(450, 50);
+
+    // 设置线段的宽度
+    context.lineWidth = 15;
+    // 设置线段的颜色
+    context.strokeStyle = '#ff0000';
+    // 设置线段两端是否为圆头
+    context.lineCap = 'round';
+
+    context.stroke();
+</script>
+</body>
+</html>

@@ -49,7 +49,7 @@
 
         // 绘制小时的点
         // 定义标记小时的数组
-        var hourNumbers = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2];
+        let hourNumbers = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2];
         // 绘制的刻度在整个画布左右居中
         ctx.textAlign = 'center';
         // 同理，上下居中
@@ -68,10 +68,10 @@
         });
 
         // 绘制分钟的点
-        for (var i = 0; i < 60; i++) {
-            var rad = 2 * Math.PI / 60 * i;
-            var x = Math.cos(rad) * (r - 18 * rem);
-            var y = Math.sin(rad) * (r - 18 * rem);
+        for (let i = 0; i < 60; i++) {
+            let rad = 2 * Math.PI / 60 * i;
+            let x = Math.cos(rad) * (r - 18 * rem);
+            let y = Math.sin(rad) * (r - 18 * rem);
             ctx.beginPath();
             if (i % 5 === 0) {
                 ctx.fillStyle = '#000';
@@ -83,7 +83,7 @@
         }
     }
 
-    // 2、绘制时钟的针
+    // 2、绘制时针
     function drawHour(hour, minute) {
         // 存储画布状态
         ctx.save();
@@ -92,7 +92,7 @@
         // 每小时旋转的弧度
         var rad = 2 * Math.PI / 12 * hour;
         // 每分钟旋转的弧度
-        var mrad = 2 * Math.PI / 12 / 60 * minute;
+        let mrad = 2 * Math.PI / 12 / 60 * minute;
         // 旋转
         ctx.rotate(rad + mrad);
         // 设置宽度
@@ -109,21 +109,21 @@
         ctx.restore();
     }
 
-    // 3、绘制分钟的针
+    // 3、绘制分针
     function drawMinute(minute) {
         // 存储画布状态
         ctx.save();
         // 开始一条路径
         ctx.beginPath();
         // 每分钟旋转的弧度
-        var mrad = 2 * Math.PI / 60 * minute;
+        let mrad = 2 * Math.PI / 60 * minute;
         // 旋转
         ctx.rotate(mrad);
         // 设置宽度
         ctx.lineWidth = 3 * rem;
         // 移动起始点至（0,10）
         ctx.moveTo(0, 10 * rem);
-        // 从起始点绘制到（0，r/2）点，负号表示方向向上
+        // 从起始点绘制到（0，r+30）点，负号表示方向向上
         ctx.lineTo(0, -r + 30 * rem);
         // 设置结束线帽
         ctx.lineCap = 'round';
@@ -133,7 +133,7 @@
         ctx.restore();
     }
 
-    // 4、绘制秒钟的针
+    // 4、绘制秒针
     function drawSecond(second) {
         // 存储画布状态
         ctx.save();
@@ -141,10 +141,10 @@
         ctx.beginPath();
         ctx.fillStyle = '#ff0000';
         // 每分钟旋转的弧度
-        var srad = 2 * Math.PI / 60 * second;
+        let srad = 2 * Math.PI / 60 * second;
         // 旋转
         ctx.rotate(srad);
-        // 移动起始点至（0,10）
+        // 绘制一端细一端粗的秒针
         ctx.moveTo(-2 * rem, 20 * rem);
         ctx.lineTo(2 * rem, 20 * rem);
         ctx.lineTo(1, -r + 18 * rem);
@@ -168,13 +168,13 @@
         // 重新绘制之前清除画布，否则状态叠加
         ctx.clearRect(0, 0, width, height);
         // 获取当前时间
-        var now = new Date();
+        let now = new Date();
         // 获取当前小时
-        var hour = now.getHours();
+        let hour = now.getHours();
         // 获取当前分钟
-        var minute = now.getMinutes();
+        let minute = now.getMinutes();
         // 获取当前秒数
-        var second = now.getSeconds();
+        let second = now.getSeconds();
 
         // 绘制圆盘背景
         drawBackground();

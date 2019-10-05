@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绘制时钟</title>
+    <style>
+        div {
+            text-align: center;
+            margin-top: 250px;
+        }
+
+        #clock {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <canvas id="clock" height="200px" width="200px"></canvas>
+</div>
+<script>
+    // 获取画布
+    let dom = document.getElementById('clock');
+    // 获取canvas上下文
+    let ctx = dom.getContext('2d');
+    // 获取预先设置的canvas画布宽度
+    let width = ctx.canvas.width;
+    // 获取预先设置的canvas画布高度
+    let height = ctx.canvas.height;
+    // 定义半径，为后续绘制圆形图案做准备
+    let r = width / 2;
+    // 定义相对单位，放大缩小比例时会用到
+    let rem = width / 200;
+
+    // 1、绘制圆盘背景
+    function drawBackground() {
+        // 每次开始前都要保存当前画布状态，以免移动画布影响后续绘制
+        ctx.save();
+        // 将起始点位置移动至圆心
+        ctx.translate(r, r);
+        // 每次开始绘制前必须开始一条路径
+        ctx.beginPath();
+        // 设置绘制线的宽度
+        ctx.lineWidth = 10;
+        // 画一个整圆
+        ctx.arc(0, 0, r - ctx.lineWidth / 2, 0, 2 * Math.PI, false);
+        // 对圆进行描边
+        ctx.stroke();
+
+        // 绘制小时的点
+        // 定义标记小时的数组
+        var hourNumbers = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2];
+        // 绘制的刻度在整个画布左右居中
+        ctx.textAlign = 'center';
+        // 同理，上下居中
+        ctx.textBaseline = 'middle';
+        // 设置显示刻度的数字 1,2,3.. 的字体及字号
+        ctx.font = 18 * rem + 'px Arial';
+        // 遍历取出各刻度及所在索引
+        hourNumbers.map(function (number, i) {
+            // 每个刻度所占弧度为索引乘以一小时的弧度，即 1点钟30度，2点钟60度，以此类推..
+            var rad = 2 * Math.PI / 12 * i;
+            // 确定各刻度点 X、Y坐标
+            var x = Math.cos(rad) * (r - 30 * rem);
+            var y = Math.sin(rad) * (r - 30 * rem);
+            // 绘制文字
+            ctx.fillText(number, x, y)
+        });
+
+        // 绘制分钟的点
+        for (var i = 0; i < 60; i++) {
+            var rad = 2 * Math.PI / 60 * i;
+            var x = Math.cos(rad) * (r - 18 * rem);
+            var y = Math.sin(rad) * (r - 18 * rem);
+            ctx.beginPath();
+            if (i % 5 === 0) {
+                ctx.fillStyle = '#000';
+            } else {
+                ctx.fillStyle = '#ccc';
+            }
+            ctx.arc(x, y, 2 * rem, 0, 2 * Math.PI, false);
+            ctx.fill();
+        }
+    }
+
+    // 2、绘制时钟的针
+    function drawHour(hour, minute) {
+        // 存储画布状态
+        ctx.save();
+        // 开始一条路径
+        ctx.beginPath();
+        // 每小时旋转的弧度
+        var rad = 2 * Math.PI / 12 * hour;
+        // 每分钟旋转的弧度
+        var mrad = 2 * Math.PI / 12 / 60 * minute;
+        // 旋转
+        ctx.rotate(rad + mrad);
+        // 设置宽度
+        ctx.lineWidth = 6 * rem;
+        // 移动起始点至（0,10）
+        ctx.moveTo(0, 10 * rem);
+        // 从起始点绘制到（0，r/2）点，负号表示方向向上
+        ctx.lineTo(0, -r / 2);
+        // 设置结束线帽
+        ctx.lineCap = 'round';
+        // 描边
+        ctx.stroke();
+        // 将画布恢复到旋转之前状态
+        ctx.restore();
+    }
+
+    // 3、绘制分钟的针
+    function drawMinute(minute) {
+        // 存储画布状态
+        ctx.save();
+        // 开始一条路径
+        ctx.beginPath();
+        // 每分钟旋转的弧度
+        var mrad = 2 * Math.PI / 60 * minute;
+        // 旋转
+        ctx.rotate(mrad);
+        // 设置宽度
+        ctx.lineWidth = 3 * rem;
+        // 移动起始点至（0,10）
+        ctx.moveTo(0, 10 * rem);
+        // 从起始点绘制到（0，r/2）点，负号表示方向向上
+        ctx.lineTo(0, -r + 30 * rem);
+        // 设置结束线帽
+        ctx.lineCap = 'round';
+        // 描边
+        ctx.stroke();
+        // 将画布恢复到旋转之前状态
+        ctx.restore();
+    }
+
+    // 4、绘制秒钟的针
+    function drawSecond(second) {
+        // 存储画布状态
+        ctx.save();
+        // 开始一条路径
+        ctx.beginPath();
+        ctx.fillStyle = '#ff0000';
+        // 每分钟旋转的弧度
+        var srad = 2 * Math.PI / 60 * second;
+        // 旋转
+        ctx.rotate(srad);
+        // 移动起始点至（0,10）
+        ctx.moveTo(-2 * rem, 20 * rem);
+        ctx.lineTo(2 * rem, 20 * rem);
+        ctx.lineTo(1, -r + 18 * rem);
+        ctx.lineTo(-1, -r + 18 * rem);
+        // 描边
+        ctx.fill();
+        // 将画布恢复到旋转之前状态
+        ctx.restore();
+    }
+
+    // 5、绘制原点
+    function drawDot() {
+        ctx.beginPath();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.arc(0, 0, 3 * rem, 0, 2 * Math.PI, false);
+        ctx.fill();
+    }
+
+    // 绘制方法
+    function draw() {
+        // 重新绘制之前清除画布，否则状态叠加
+        ctx.clearRect(0, 0, width, height);
+        // 获取当前时间
+        var now = new Date();
+        // 获取当前小时
+        var hour = now.getHours();
+        // 获取当前分钟
+        var minute = now.getMinutes();
+        // 获取当前秒数
+        var second = now.getSeconds();
+
+        // 绘制圆盘背景
+        drawBackground();
+        // 绘制时针
+        drawHour(hour, minute);
+        // 绘制分针
+        drawMinute(minute);
+        // 绘制秒针
+        drawSecond(second);
+        // 绘制原点
+        drawDot();
+        // 恢复画布状态
+        ctx.restore();
+    }
+
+    // 定时器每隔1秒执行整个绘画方法
+    setInterval(draw, 1000);
+</script>
+</body>
+</html>
